@@ -1,0 +1,69 @@
+﻿<Page x:Class="MVVMSample.MainPageClassicOnly"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:converters="using:MVVMSample.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="using:MVVMSample"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewModels="using:MVVMSample.ViewModels"
+      DataContext="{Binding MainViewModel,
+                            Source={StaticResource Locator}}"
+      mc:Ignorable="d">
+
+    <!--<Page.DataContext>
+        <viewModels:MainViewModel />
+    </Page.DataContext>-->
+
+    <Page.Resources>
+        <converters:BoolToBrushConverter x:Key="NameLenghtToBrushConverter"
+                                         FalseColor="Black"
+                                         TrueColor="Red" />
+        <converters:BoolToBrushConverter x:Key="AnotherConverter"
+                                         FalseColor="Blue"
+                                         TrueColor="Yellow" />
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="{StaticResource AppName}" />
+            <TextBox Text="{Binding Person.Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{Binding Person.Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Foreground="{Binding IsNameToShort, Converter={StaticResource NameLenghtToBrushConverter}}"
+                       Text="{Binding Person.Fullname}" />
+            <Button Click="ButtonBase_OnClick"
+                    Content="Test" />
+
+            <ListView Height="150"
+                      Background="AliceBlue"
+                      ItemsSource="{Binding Heros}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Fullname}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <TextBox Header="Firstname"
+                     Text="{Binding NewHeroFirstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Header="Lastname"
+                     Text="{Binding NewHeroLastnameX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button  Click="ButtonBase_OnClick"
+                     Command="{Binding AddHeroCommand}"
+                     Content="Add Hero"
+                     IsEnabled="{Binding CanAddHero}" />
+            <Grid Height="100">
+                <Rectangle Width="80"
+                           Height="30"
+                           Fill="YellowGreen"
+                           RenderTransformOrigin="0.5,0.5">
+                    <Rectangle.RenderTransform>
+                        <CompositeTransform Rotation="{Binding ElementName=Slider, Path=Value}" />
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+            </Grid>
+            <Slider Minimum="0"
+                    Maximum="360"
+                    Value="100"
+                    Width="200" 
+                    x:Name="Slider"/>
+        </StackPanel>
+    </Grid>
+</Page>
